@@ -1,19 +1,27 @@
-export const createCategory = async (req: Request, res: Response): Promise<void> => {
-    const { name } = req.body;
+import { PrismaClient } from '@prisma/client';
 
-    try {
-        const category = await prisma.category.create({
-            data: {
-                name,
-            },
-        });
+const prisma = new PrismaClient();
 
-        res.status(201).json(category);
-    } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-            res.status(409).json({ message: "Category name must be unique." });
-        } else {
-            res.status(500).json({ message: "Internal server error" });
-        }
-    }
-};
+export async function createCategory(categoryData: any) {
+  try {
+    const category = await prisma.category.create({
+      data: categoryData,
+    });
+    return category;
+  } catch (error) {
+    throw new Error('Failed to create category');
+  }
+}
+
+export async function deleteCategory(categoryId: number) {
+  try {
+    const category = await prisma.category.delete({
+      where: {
+        id: categoryId,
+      },
+    });
+    return category;
+  } catch (error) {
+    throw new Error('Failed to delete category');
+  }
+}

@@ -1,18 +1,27 @@
-import express, { Express } from 'express';
-import tasksRoutes from './routes/tasksRoutes';
-import categoriesRoutes from './routes/categoriesRoutes';
-import errorHandler from './middlewares/errorHandler';
+import express from 'express';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+import taskRoutes from './routes/tasksRoutes';
+import categoryRoutes from './routes/categoryRoutes';
+import { errorHandler } from './middlewares/errorHandler';
 
-const app: Express = express();
+// Carregar variáveis de ambiente
+dotenv.config();
+
+// Inicializar o aplicativo Express
+const app = express();
+
+// Middleware de segurança
+app.use(helmet());
+
+// Configuração do middleware para analisar corpos de solicitação JSON
 app.use(express.json());
 
-app.use('/tasks', tasksRoutes);
-app.use('/categories', categoriesRoutes);
+// Rotas
+app.use('/tasks', taskRoutes);
+app.use('/categories', categoryRoutes);
 
-// Error handling middleware
+// Middleware de tratamento de erros
 app.use(errorHandler);
 
-const PORT: string | number = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+export default app;
