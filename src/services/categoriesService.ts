@@ -2,18 +2,29 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const createCategoryService = async (name: string) => {
-    return prisma.category.create({
-        data: {
-            name
-        }
+class CategoryService {
+  async createCategory(data: { name: string }) {
+    const category = await prisma.category.create({
+      data,
     });
-};
+    return category;
+  }
 
-export const deleteCategoryService = async (id: number) => {
-    const category = await prisma.category.findUnique({ where: { id } });
-    if (!category) {
-        throw { status: 404, message: "Category not found" };
-    }
-    return prisma.category.delete({ where: { id } });
-};
+  async getCategoryById(id: number) {
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        tasks: true, // Inclui tarefas associadas à categoria
+      },
+    });
+    return category;
+  }
+
+  async deleteCategory(id: number) {
+    await prisma.category.delete({
+      where: { id },
+    });
+  }
+}
+
+export const categoryService = new CategoryService();

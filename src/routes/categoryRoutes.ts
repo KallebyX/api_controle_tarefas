@@ -1,10 +1,12 @@
 import express from 'express';
-import { createCategory, deleteCategory } from '../controllers/categoriesController';
+import { CategoryController } from '../controllers/CategoryController';
 
 const router = express.Router();
 
-// Rotas para categorias
-router.post('/', createCategory);
-router.delete('/:id', deleteCategory);
+// Rota para criar uma nova categoria
+router.post('/categories', CategoryController.createCategory);
+
+// Rota para deletar uma categoria específica pelo ID
+router.delete('/categories/:id', CategoryController.deleteCategory);
 
 export default router;
