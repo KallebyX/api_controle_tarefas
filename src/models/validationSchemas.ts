@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
 export const createTaskSchema = z.object({
-  title: z.string().min(3),
+  title: z.string(),
   content: z.string(),
-  categoryId: z.number(),
+  categoryId: z.number().optional(),
 });
-
-// Implementar outros esquemas de validação conforme necessário

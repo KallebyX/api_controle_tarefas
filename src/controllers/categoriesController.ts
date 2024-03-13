@@ -1,27 +1,22 @@
-import { PrismaClient } from '@prisma/client';
+import { Request, Response, NextFunction } from 'express';
+import { createCategoryService, deleteCategoryService } from '../services/categoriesService';
 
-const prisma = new PrismaClient();
+export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { name } = req.body;
+        const category = await createCategoryService(name);
+        res.status(201).json(category);
+    } catch (err) {
+        next(err);
+    }
+};
 
-export async function createCategory(categoryData: any) {
-  try {
-    const category = await prisma.category.create({
-      data: categoryData,
-    });
-    return category;
-  } catch (error) {
-    throw new Error('Failed to create category');
-  }
-}
-
-export async function deleteCategory(categoryId: number) {
-  try {
-    const category = await prisma.category.delete({
-      where: {
-        id: categoryId,
-      },
-    });
-    return category;
-  } catch (error) {
-    throw new Error('Failed to delete category');
-  }
-}
+export const deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        await deleteCategoryService(parseInt(id));
+        res.sendStatus(204);
+    } catch (err) {
+        next(err);
+    }
+};
